@@ -1,0 +1,5 @@
+# write here the flasher tool and stdio configurations
+
+include $(RIOTBOARD)/common/esp32/Makefile.include
+
+TTY_BOARD_FILTER := --driver 'ch340' --vendor '1a86'

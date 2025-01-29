@@ -1,0 +1,11 @@
+CPU = esp32
+
+# common board and CPU features
+include $(RIOTBOARD)/common/esp32/Makefile.features
+
+# Put defined MCU peripherals here (in alphabetical order)
+FEATURES_PROVIDED += periph_adc
+FEATURES_PROVIDED += periph_dac
+FEATURES_PROVIDED += periph_i2c
+FEATURES_PROVIDED += periph_pwm
+FEATURES_PROVIDED += periph_spi

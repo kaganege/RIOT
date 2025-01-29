@@ -1,0 +1,25 @@
+# Copyright (c) 2025 Kagan Ege
+#
+# This file is subject to the terms and conditions of the GNU Lesser
+# General Public License v2.1. See the file LICENSE in the top level
+# directory for more details.
+
+config BOARD
+    default "esp32-wemos-lolin32-lite" if BOARD_ESP32_WEMOS_LOLIN32_LITE
+
+config BOARD_ESP32_WEMOS_LOLIN32_LITE
+    bool
+    default y
+    select BOARD_COMMON_ESP32
+    select CPU_MODEL_ESP32
+
+    # Put defined MCU peripherals here (in alphabetical order)
+    select HAS_PERIPH_ADC
+    select HAS_PERIPH_DAC
+    select HAS_PERIPH_I2C
+    select HAS_PERIPH_PWM
+    select HAS_PERIPH_SPI
+
+    # Put other features for this board (in alphabetical order)
+
+source "$(RIOTBOARD)/common/esp32/Kconfig"
