@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 2025 Kagan Ege
+ *
+ * This file is subject to the terms and conditions of the GNU Lesser
+ * General Public License v2.1. See the file LICENSE in the top level
+ * directory for more details.
+ */
+
+ /**
+  * @defgroup    boards_esp32-wemos-lolin32-lite WeMos LOLIN32 Lite
+  * @ingroup     boards_esp32
+  * @brief       Support for the WeMos LOLIN32 Lite board.
+  * @author      Kagan Ege <kaganegeozkan@gmail.com>
+  *
+  * ### General information
+  *
+  * WeMos LOLIN32 Lite is the ESP32 development board. Like other ESP32 boards,
+  * it also has a 32-bit dual-core microcontroller which operates at 240MHz, has
+  * 4MB of flash storage. It can be powered via lithium polymer batteries with a
+  * 500mA max charging current or via micro USB. The firmware that comes with
+  * this board accepts AT commands by default.
+  *
+  * ### Board Configuration {#esp32_wemos_lolin32_lite_board_configuration}
+  *
+  * The following table shows the default board configuration, which is sorted
+  * according to the defined functionality of GPIOs. This configuration can be
+  * overridden by an \ref esp32_application_specific_configurations
+  * "application-specific configuration".
+  *
+  * ### Pinout
+  *
+  * TODO
+  *
+  * ### Flash the board
+  *
+  * TODO
+  *
+  */
