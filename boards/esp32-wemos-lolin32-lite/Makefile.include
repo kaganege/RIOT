@@ -2,4 +2,8 @@
 
 include $(RIOTBOARD)/common/esp32/Makefile.include
 
+
+RUST_TARGET = xtensa-esp32-none-elf
+CARGO_OPTIONS += -Zbuild-std=core
+
 TTY_BOARD_FILTER := --driver 'ch340' --vendor '1a86'
