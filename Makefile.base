@@ -78,6 +78,14 @@ ifneq (,$(SRCXX))
   endif
 endif
 
+# If static analysis is enabled *and* the module claims to compile fine with it,
+# add the corresponding flags
+ifeq (1,$(STATIC_ANALYSIS))
+  ifeq (1,$(MODULE_SUPPORTS_STATIC_ANALYSIS))
+    CFLAGS := $(CFLAGS_STATIC_ANALYSIS) $(CFLAGS)
+  endif
+endif
+
 compile-commands: | $(DIRS:%=COMPILE-COMMANDS--%)
 	$(file >$(BINDIR)/$(MODULE)/compile_cmds.txt,SRC: $(sort $(SRC) $(SRC_NO_LTO)))
 	$(file >>$(BINDIR)/$(MODULE)/compile_cmds.txt,SRC_NO_LTO: $(sort $(SRC_NO_LTO)))
@@ -147,8 +155,6 @@ OBJ_DEPS += $(RIOTBUILD_CONFIG_HEADER_C)
 
 $(OBJC): $(BINDIR)/$(MODULE)/%.o: %.c $(OBJ_DEPS) | $(if $(SHOULD_RUN_KCONFIG),$(KCONFIG_GENERATED_AUTOCONF_HEADER_C))
 	$(Q)$(CCACHE) $(CC) \
-		-DRIOT_FILE_RELATIVE=\"$(patsubst $(RIOTBASE)/%,%,$(abspath $<))\" \
-		-DRIOT_FILE_NOPATH=\"$(notdir $<)\" \
 		$(CFLAGS) $(INCLUDES) -MQ '$@' -MD -MP -c -o $@ $(abspath $<)
 ifneq (,$(SHOULD_RUN_KCONFIG))
 	$(Q)$(FIXDEP) $(@:.o=.d) $@ $(KCONFIG_SYNC_DIR) > $(@:.o=.tmp)
@@ -157,8 +163,6 @@ endif
 
 $(GENOBJC): %.o: %.c $(OBJ_DEPS) | $(if $(SHOULD_RUN_KCONFIG),$(KCONFIG_GENERATED_AUTOCONF_HEADER_C))
 	$(Q) $(CCACHE) $(CC) \
-		-DRIOT_FILE_RELATIVE=\"$(patsubst $(RIOTBASE)/%,%,$<)\" \
-		-DRIOT_FILE_NOPATH=\"$(notdir $<)\" \
 		$(CFLAGS) $(INCLUDES) -MQ '$@' -MD -MP -c -o $@ $<
 ifneq (,$(SHOULD_RUN_KCONFIG))
 	$(Q)$(FIXDEP) $(@:.o=.d) $@ $(KCONFIG_SYNC_DIR) > $(@:.o=.tmp)
@@ -167,8 +171,6 @@ endif
 
 $(OBJCXX): $(BINDIR)/$(MODULE)/%.o: %.$(SRCXXEXT) $(OBJ_DEPS) | $(if $(SHOULD_RUN_KCONFIG),$(KCONFIG_GENERATED_AUTOCONF_HEADER_C))
 	$(Q)$(CCACHE) $(CXX) \
-		-DRIOT_FILE_RELATIVE=\"$(patsubst $(RIOTBASE)/%,%,$(abspath $<))\" \
-		-DRIOT_FILE_NOPATH=\"$(notdir $<)\" \
 		$(CXXFLAGS) $(CXXINCLUDES) $(INCLUDES) -MQ '$@' -MD -MP -c -o $@ $(abspath $<)
 ifneq (,$(SHOULD_RUN_KCONFIG))
 	$(Q)$(FIXDEP) $(@:.o=.d) $@ $(KCONFIG_SYNC_DIR) > $(@:.o=.tmp)

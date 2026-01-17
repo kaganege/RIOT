@@ -1,9 +1,6 @@
 /*
- * Copyright (C) 2023 HAW Hamburg
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2023 HAW Hamburg
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -24,7 +21,6 @@
 int main(void)
 {
     TESTS_START();
-    psa_crypto_init();
     TESTS_RUN(tests_psa_persistent_single_key_storage());
     TESTS_RUN(tests_psa_persistent_asym_keypair_storage());
     TESTS_RUN(tests_psa_fail_overwrite_existing_key());

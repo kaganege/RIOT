@@ -1,9 +1,6 @@
 /*
- * Copyright (C) 2014-2017 Freie Universität Berlin
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2014-2017 Freie Universität Berlin
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -118,10 +115,7 @@ int32_t adc_sample(adc_t line,  adc_res_t res)
     int sample;
 
     /* check if resolution is applicable */
-    if ( (res != ADC_RES_6BIT) &&
-         (res != ADC_RES_8BIT) &&
-         (res != ADC_RES_10BIT) &&
-         (res != ADC_RES_12BIT)) {
+    if ((res & ADC_CFGR1_RES) != res) {
         return -1;
     }
 

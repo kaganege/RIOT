@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup  sys_ztimer64_xtimer_compat ztimer64_xtimer_compat: 64 Bit xtimer wrapper
  * @ingroup   sys_ztimer64
@@ -17,8 +19,6 @@
  *
  * @author  Kaspar Schleiser <kaspar@schleiser.de>
  */
-#ifndef ZTIMER64_XTIMER_COMPAT_H
-#define ZTIMER64_XTIMER_COMPAT_H
 
 #include <assert.h>
 #include <stdbool.h>
@@ -134,11 +134,6 @@ static inline void xtimer_msleep(uint32_t milliseconds)
 static inline void xtimer_usleep(uint32_t microseconds)
 {
     ztimer_sleep(ZTIMER_USEC, microseconds);
-}
-
-static inline void xtimer_nanosleep(uint32_t nanoseconds)
-{
-    ztimer_sleep(ZTIMER_USEC, nanoseconds / NS_PER_US);
 }
 
 static inline void xtimer_set(xtimer_t *timer, uint32_t offset)
@@ -310,4 +305,3 @@ static inline int xtimer_msg_receive_timeout64(msg_t *msg, uint64_t timeout)
 #endif
 
 /** @} */
-#endif /* ZTIMER64_XTIMER_COMPAT_H */

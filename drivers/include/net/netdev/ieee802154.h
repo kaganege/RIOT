@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    drivers_netdev_ieee802154 802.15.4 radio drivers
  * @ingroup     drivers_netdev_api
@@ -17,8 +19,6 @@
  *
  * @author  Martine Lenders <mlenders@inf.fu-berlin.de>
  */
-#ifndef NET_NETDEV_IEEE802154_H
-#define NET_NETDEV_IEEE802154_H
 
 #include "net/eui_provider.h"
 #include "net/ieee802154.h"
@@ -246,24 +246,6 @@ int netdev_ieee802154_set(netdev_ieee802154_t *dev, netopt_t opt, const void *va
                           size_t value_len);
 
 /**
- * @brief  This function compares destination address and pan id with addresses
- * and pan id of the device
- *
- * this function is meant top be used by drivers that do not support address
- * filtering in hw
- *
- * @deprecated  This function is currently deprecated and will be removed
- * after Release 2022.01. Use @ref ieee802154_dst_filter instead.
- *
- * @param[in] dev       network device descriptor
- * @param[in] mhr       mac header
- *
- * @return 0            successful if packet is for the device
- * @return 1            fails if packet is not for the device or pan
- */
-int netdev_ieee802154_dst_filter(netdev_ieee802154_t *dev, const uint8_t *mhr);
-
-/**
  * @brief   Configure the hardware address of a IEEE 802.15.4 devices
  *
  * This will obtain a long and short address based on the netdev ID.
@@ -286,5 +268,4 @@ static inline void netdev_ieee802154_setup(netdev_ieee802154_t *dev)
 }
 #endif
 
-#endif /* NET_NETDEV_IEEE802154_H */
 /** @} */

@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    net_coap CoAP defines
  * @ingroup     net
@@ -18,9 +20,6 @@
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  *
  */
-
-#ifndef NET_COAP_H
-#define NET_COAP_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -540,6 +539,7 @@ typedef enum {
  * @brief   Marks the boundary between header and payload
  */
 #define COAP_PAYLOAD_MARKER      (0xFF)
+#define COAP_PAYLOAD_MARKER_SIZE (1U)   /**< Size of the payload marker */
 
 /**
  * @defgroup net_coap_conf    CoAP compile configurations
@@ -630,5 +630,4 @@ typedef enum {
 }
 #endif
 
-#endif /* NET_COAP_H */
 /** @} */

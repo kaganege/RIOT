@@ -1,9 +1,7 @@
 /*
- * Copyright (C) 2022 Bennet Blischke / HAW Hamburg
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2022 Bennet Hattesen
+ * SPDX-FileCopyrightText: 2022 HAW Hamburg
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -490,7 +488,6 @@ static void _result_components_matches_input(void)
     }
 }
 
-
 static void test_uri_parser__unterminated_string(void)
 {
     char *failure_msg =
@@ -549,7 +546,6 @@ static void test_uri_parser__unterminated_string(void)
         TEST_FAIL(failure_msg);
     }
 }
-
 
 Test *tests_uri_parser_tests(void)
 {

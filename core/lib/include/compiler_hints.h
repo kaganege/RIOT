@@ -1,11 +1,10 @@
 /*
- * Copyright (C) 2014 Freie Universität Berlin
- *               2017 HAW-Hamburg
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2014 Freie Universität Berlin
+ * SPDX-FileCopyrightText: 2017 HAW-Hamburg
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
+
+#pragma once
 
 /**
  * @ingroup     core_internal
@@ -17,9 +16,6 @@
  * @author      René Kijewski <rene.kijewski@fu-berlin.de>
  * @author      Michel Rottleuthner <michel.rottleuthner@haw-hamburg.de>
  */
-
-#ifndef COMPILER_HINTS_H
-#define COMPILER_HINTS_H
 
 #include <assert.h>
 #include <stdint.h>
@@ -34,11 +30,25 @@ extern "C" {
  *        cannot return.
  */
 #ifndef NORETURN
-#ifdef __GNUC__
-#define NORETURN  __attribute__((noreturn))
-#else
-#define NORETURN
+#  ifdef __GNUC__
+#    define NORETURN __attribute__((noreturn))
+#  else
+#    define NORETURN
+#  endif
 #endif
+
+/**
+ * @def NONSTRING
+ * @brief The `NONSTRING` keyword tells the compiler to assume that a char array
+ *        is not used as c string. (Specifically: It does not need a terminating
+ *        zero byte.)
+ */
+#ifndef NONSTRING
+#  if ((__GNUC__ >= 15) || (__clang_major__ >= 21))
+#    define NONSTRING __attribute__((nonstring))
+#  else
+#    define NONSTRING
+#  endif
 #endif
 
 /**
@@ -49,11 +59,11 @@ extern "C" {
  *        optimization just as an arithmetic operator would be.
  */
 #ifndef PURE
-#ifdef __GNUC__
-#define PURE  __attribute__((pure))
-#else
-#define PURE
-#endif
+#  ifdef __GNUC__
+#    define PURE __attribute__((pure))
+#  else
+#    define PURE
+#  endif
 #endif
 
 /**
@@ -62,11 +72,11 @@ extern "C" {
  *        static functions, function arguments, local variables
  */
 #ifndef MAYBE_UNUSED
-#ifdef __GNUC__
-#define MAYBE_UNUSED  __attribute__((unused))
-#else
-#define MAYBE_UNUSED
-#endif
+#  ifdef __GNUC__
+#    define MAYBE_UNUSED __attribute__((unused))
+#  else
+#    define MAYBE_UNUSED
+#  endif
 #endif
 
 /**
@@ -78,9 +88,9 @@ extern "C" {
  *            by llvm.
  */
 #if defined(__llvm__) || defined(__clang__)
-#define NO_SANITIZE_ARRAY __attribute__((no_sanitize("address")))
+#  define NO_SANITIZE_ARRAY __attribute__((no_sanitize("address")))
 #else
-#define NO_SANITIZE_ARRAY
+#  define NO_SANITIZE_ARRAY
 #endif
 
 /**
@@ -91,9 +101,9 @@ extern "C" {
  *            an assembler instruction causes a longjmp, or a write causes a reboot.
  */
 #if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 5)) || (__GNUC__ >= 5) || defined(__clang__)
-#define UNREACHABLE() __builtin_unreachable()
+#  define UNREACHABLE() __builtin_unreachable()
 #else
-#define UNREACHABLE() do { /* nothing */ } while (1)
+#  define UNREACHABLE()  do { /* nothing */ } while (1)
 #endif
 
 /**
@@ -139,12 +149,12 @@ extern "C" {
  * This allows providing two different implementations in C, with one being
  * more efficient if constant folding is used.
  */
-#define IS_CT_CONSTANT(expr) <IMPLEMENTATION>
+#  define IS_CT_CONSTANT(expr) <IMPLEMENTATION>
 #elif defined(__GNUC__)
 /* both clang and gcc (which both define __GNUC__) support this */
-#define IS_CT_CONSTANT(expr) __builtin_constant_p(expr)
+#  define IS_CT_CONSTANT(expr) __builtin_constant_p(expr)
 #else
-#define IS_CT_CONSTANT(expr) 0
+#  define IS_CT_CONSTANT(expr) 0
 #endif
 
 /**
@@ -176,9 +186,9 @@ extern "C" {
  * @param[in] cond  Condition that is guaranteed to be true
  */
 #ifdef NDEBUG
-#define assume(cond)    ((cond) ? (void)0 : UNREACHABLE())
+#  define assume(cond) ((cond) ? (void)0 : UNREACHABLE())
 #else
-#define assume(cond)    assert(cond)
+#  define assume(cond) assert(cond)
 #endif
 
 /**
@@ -198,5 +208,4 @@ static inline unsigned may_be_zero(unsigned n)
 }
 #endif
 
-#endif /* COMPILER_HINTS_H */
 /** @} */

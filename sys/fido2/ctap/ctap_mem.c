@@ -28,7 +28,7 @@
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
 
-#ifdef BOARD_NATIVE
+#ifdef CPU_NATIVE
 #include "mtd_default.h"
 /* native mtd is file backed => Start address of flash is 0. */
 char *_backing_memory = NULL;
@@ -62,8 +62,8 @@ static ctap_status_code_t _flash_write(const void *buf, uint32_t addr, size_t le
 
 ctap_status_code_t fido2_ctap_mem_init(void)
 {
-#ifdef BOARD_NATIVE
-    _mtd_dev = mtd_default_get_dev(0);
+#ifdef CPU_NATIVE
+    _mtd_dev = mtd_dev_get(0);
 #endif
 
     int ret = mtd_init(_mtd_dev);
@@ -123,7 +123,7 @@ static ctap_status_code_t _flash_write(const void *buf, uint32_t addr, size_t le
 
 static bool _flash_is_erased(uint32_t addr, size_t len)
 {
-#ifdef BOARD_NATIVE
+#ifdef CPU_NATIVE
     return true;
 #else
     for (size_t i = 0; i < len; i++) {
@@ -183,8 +183,7 @@ ctap_status_code_t fido2_ctap_mem_write_rk_to_flash(ctap_resident_key_t *rk)
         ret = mtd_read(_mtd_dev, &tmp, addr, sizeof(ctap_resident_key_t));
 
         if (ret < 0) {
-            DEBUG("%s, %d: mtd_read failed", RIOT_FILE_RELATIVE,
-                  __LINE__);
+            DEBUG("%s, %d: mtd_read failed", __FILE__, __LINE__);
             return false;
         }
 
@@ -243,8 +242,7 @@ ctap_status_code_t fido2_ctap_mem_read_rk_from_flash(ctap_resident_key_t *key, u
         int ret = mtd_read(_mtd_dev, key, *addr, sizeof(ctap_resident_key_t));
 
         if (ret < 0) {
-            DEBUG("%s, %d: mtd_read failed", RIOT_FILE_RELATIVE,
-                  __LINE__);
+            DEBUG("%s, %d: mtd_read failed", __FILE__, __LINE__);
             return CTAP1_ERR_OTHER;
         }
 

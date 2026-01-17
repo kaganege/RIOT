@@ -1,9 +1,6 @@
 /*
- * Copyright (C) 2020 TUBA Freiberg
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2020 TUBA Freiberg
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -21,7 +18,6 @@
 #include "thread.h"
 
 static kernel_pid_t main_pid;
-
 
 void * thread_wakeup_main(void *d)
 {

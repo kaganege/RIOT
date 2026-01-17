@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2013,2019 Freie Universität Berlin
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2013 Freie Universität Berlin
+ * SPDX-FileCopyrightText: 2019 Freie Universität Berlin
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
+
+#ifndef IRQ_H
+#define IRQ_H
 
 /**
  * @defgroup    core_irq     IRQ Handling
@@ -19,9 +20,6 @@
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  */
 
-#ifndef IRQ_H
-#define IRQ_H
-
 #include <stdbool.h>
 #include "cpu_conf.h"
 
@@ -30,9 +28,9 @@ extern "C" {
 #endif
 
 #ifdef IRQ_API_INLINED
-#define MAYBE_INLINE static inline __attribute__((always_inline))
+#  define MAYBE_INLINE static inline __attribute__((always_inline))
 #else
-#define MAYBE_INLINE
+#  define MAYBE_INLINE
 #endif /* IRQ_API_INLINED */
 
 #ifndef IRQ_API_INLINED
@@ -91,12 +89,12 @@ MAYBE_INLINE bool irq_is_enabled(void);
 MAYBE_INLINE bool irq_is_in(void);
 
 #else
-#include "irq_arch.h" /* IWYU pragma: export */
-#endif /* IRQ_API_INLINED */
+#  include "irq_arch.h" /* IWYU pragma: export */
+#endif                  /* IRQ_API_INLINED */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IRQ_H */
 /** @} */
+#endif /* IRQ_H */

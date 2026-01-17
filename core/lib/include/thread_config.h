@@ -1,12 +1,11 @@
 /*
- * Copyright (C) 2014-21 Freie Universität Berlin
- *               2021 Inria
- *               2021 Kaspar Schleiser <kaspar@schleiser.de>
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2014-2021 Freie Universität Berlin
+ * SPDX-FileCopyrightText: 2021 Inria
+ * SPDX-FileCopyrightText: 2021 Kaspar Schleiser <kaspar@schleiser.de>
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
+
+#pragma once
 
 /**
  * @ingroup     core_thread
@@ -18,9 +17,6 @@
  *
  * @author      Kaspar Schleiser <kaspar@schleiser.de>
  */
-
-#ifndef THREAD_CONFIG_H
-#define THREAD_CONFIG_H
 
 #include "cpu_conf.h"
 #include "sched.h"      /* for SCHED_PRIO_LEVELS */
@@ -140,5 +136,4 @@ extern "C" {
 }
 #endif
 
-#endif /* THREAD_CONFIG_H */
 /** @} */

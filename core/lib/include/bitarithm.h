@@ -1,11 +1,10 @@
 /*
- * Copyright (C) 2017 Kaspar Schleiser <kaspar@schleiser.de>
- *               2014 Freie Universität Berlin
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2017 Kaspar Schleiser <kaspar@schleiser.de>
+ * SPDX-FileCopyrightText: 2014 Freie Universität Berlin
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
+
+#pragma once
 
 /**
  * @ingroup     core_util
@@ -17,9 +16,6 @@
  * @author      Kaspar Schleiser <kaspar@schleiser.de>
  * @author      Martine Lenders <mlenders@inf.fu-berlin.de>
  */
-
-#ifndef BITARITHM_H
-#define BITARITHM_H
 
 #include <stdint.h>
 
@@ -278,5 +274,4 @@ static inline unsigned bitarithm_test_and_clear(unsigned state, uint8_t *index)
 }
 #endif
 
-#endif /* BITARITHM_H */
 /** @} */

@@ -6,6 +6,8 @@
  * details.
  */
 
+#pragma once
+
 /**
  * @defgroup    sys_string_utils    Utility functions that are missing in `string.h`
  * @ingroup     sys
@@ -32,9 +34,6 @@
 
 #include "flash_utils.h"
 #include "modules.h"
-
-#ifndef STRING_UTILS_H
-#define STRING_UTILS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -87,6 +86,7 @@ static inline const char *string_writer_str(const string_writer_t *sw)
     return sw->start;
 }
 
+#ifndef DOXYGEN
 /**
  * @brief   internal helper macro
  */
@@ -96,6 +96,8 @@ static inline const char *string_writer_str(const string_writer_t *sw)
 #define __swprintf swprintf
 __attribute__ ((format (printf, 2, 3)))
 #endif
+int __swprintf(string_writer_t *sw, FLASH_ATTR const char *restrict format, ...);
+#else
 /**
  * @brief   Write a formatted string to a buffer
  *          The string will be truncated if there is not enough space left in
@@ -106,9 +108,10 @@ __attribute__ ((format (printf, 2, 3)))
  * @param[in]   format  format string to write
  *
  * @return      number of bytes written on success
- *              -E2BIG if the string was truncated
+ * @retval      -E2BIG if the string was truncated
  */
-int __swprintf(string_writer_t *sw, FLASH_ATTR const char *restrict format, ...);
+int swprintf(string_writer_t *sw, FLASH_ATTR const char *restrict format, ...);
+#endif /* DOXYGEN */
 
 #if IS_ACTIVE(HAS_FLASH_UTILS_ARCH)
 #define swprintf(sw, fmt, ...) flash_swprintf(sw, TO_FLASH(fmt), ## __VA_ARGS__)
@@ -179,9 +182,16 @@ ssize_t strscpy(char *dest, const char *src, size_t count);
  */
 const void *memchk(const void *data, uint8_t c, size_t len);
 
+/**
+ * @brief   Reverse the order of bytes in a buffer
+ *
+ * @param[in, out]  buf     The buffer to reverse
+ * @param[in]       len     Size of the buffer
+ */
+void reverse_buf(void *buf, size_t len);
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* STRING_UTILS_H */
 /** @} */

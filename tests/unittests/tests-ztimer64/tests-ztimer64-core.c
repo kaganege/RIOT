@@ -1,7 +1,5 @@
 /*
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -50,7 +48,7 @@ static void setup(void)
 }
 
 /**
- * @brief
+ * @brief   Test ztimer64_now()
  */
 static void test_ztimer64_now(void)
 {

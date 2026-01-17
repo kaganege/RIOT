@@ -7,9 +7,11 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    drivers_mtd_sdmmc MTD wrapper for SD/MMC devices
- * @ingroup     drivers_storage
+ * @ingroup     drivers_mtd
  * @brief       Driver for SD Memory Cards and MMCs/eMMCs using the MTD interface
  *
  * @{
@@ -20,9 +22,6 @@
  * @author      Michel Rottleuthner <michel.rottleuthner@haw-hamburg.de>
  * @author      Gunar Schorcht <gunar@schorcht.net>
  */
-
-#ifndef MTD_SDMMC_H
-#define MTD_SDMMC_H
 
 #include <stdint.h>
 
@@ -54,5 +53,4 @@ extern const mtd_desc_t mtd_sdmmc_driver;
 }
 #endif
 
-#endif /* MTD_SDMMC_H */
 /** @} */

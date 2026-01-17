@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2014, 2015 INRIA
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2014-2015 INRIA
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
+
+#pragma once
 
 /**
  * @ingroup     core_util
@@ -18,9 +17,6 @@
  *
  * @author      Kévin Roussel <Kevin.Roussel@inria.fr>
  */
-
-#ifndef PANIC_H
-#define PANIC_H
 
 #include "kernel_defines.h"
 
@@ -85,8 +81,6 @@ typedef enum {
  *
  * @param[in] crash_code    a unique code for identifying the crash reason
  * @param[in] message       a human readable reason for the crash
- *
- * @return                  this function never returns
  * */
 NORETURN void core_panic(core_panic_t crash_code, const char *message);
 
@@ -102,5 +96,4 @@ void panic_arch(void);
 }
 #endif
 
-#endif /* PANIC_H */
 /** @} */

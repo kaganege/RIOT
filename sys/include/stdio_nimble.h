@@ -6,11 +6,13 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup     sys_stdio_nimble STDIO over NimBLE
  * @ingroup      sys_stdio
  *
- * @experimental This feature is experimental as some use-cases, such as examples/twr_aloha, show
+ * @experimental This feature is experimental as some use-cases, such as examples/advanced/twr_aloha, show
  *               unexpected behaviour.
  *
  * @brief        Standard input/output backend using NimBLE.
@@ -161,9 +163,6 @@
  * @author      Hendrik van Essen <hendrik.ve@fu-berlin.de>
  */
 
-#ifndef STDIO_NIMBLE_H
-#define STDIO_NIMBLE_H
-
 #include "stdio_base.h"
 
 #ifdef __cplusplus
@@ -200,4 +199,3 @@ extern "C" {
 }
 #endif
 /** @} */
-#endif /* STDIO_NIMBLE_H */

@@ -51,6 +51,10 @@ void saul_init_devs(void)
         extern void auto_init_nrf_vddh(void);
         auto_init_nrf_vddh();
     }
+    if (IS_USED(MODULE_ABP2)) {
+        extern void auto_init_abp2(void);
+        auto_init_abp2();
+    }
     if (IS_USED(MODULE_AD7746)) {
         extern void auto_init_ad7746(void);
         auto_init_ad7746();
@@ -59,9 +63,9 @@ void saul_init_devs(void)
         extern void auto_init_adcxx1c(void);
         auto_init_adcxx1c();
     }
-    if (IS_USED(MODULE_ADS101X)) {
-        extern void auto_init_ads101x(void);
-        auto_init_ads101x();
+    if (IS_USED(MODULE_ADS1X1X)) {
+        extern void auto_init_ads1x1x(void);
+        auto_init_ads1x1x();
     }
     if (IS_USED(MODULE_ADXL345)) {
         extern void auto_init_adxl345(void);
@@ -114,6 +118,10 @@ void saul_init_devs(void)
     if (IS_USED(MODULE_GP2Y10XX)) {
         extern void auto_init_gp2y10xx(void);
         auto_init_gp2y10xx();
+    }
+    if (IS_USED(MODULE_GP8XXX)) {
+        extern void auto_init_gp8xxx(void);
+        auto_init_gp8xxx();
     }
     if (IS_USED(MODULE_GROVE_LEDBAR)) {
         extern void auto_init_grove_ledbar(void);
@@ -215,6 +223,14 @@ void saul_init_devs(void)
         extern void auto_init_max31855(void);
         auto_init_max31855();
     }
+    if (IS_USED(MODULE_MAX31865)) {
+        extern void auto_init_max31865(void);
+        auto_init_max31865();
+    }
+    if (IS_USED(MODULE_MCP23X17)) {
+        extern void auto_init_mcp23x17(void);
+        auto_init_mcp23x17();
+    }
     if (IS_USED(MODULE_MCP47XX)) {
         extern void auto_init_mcp47xx(void);
         auto_init_mcp47xx();
@@ -242,6 +258,10 @@ void saul_init_devs(void)
     if (IS_USED(MODULE_OPT3001)) {
         extern void auto_init_opt3001(void);
         auto_init_opt3001();
+    }
+    if (IS_USED(MODULE_PAA5100JE)) {
+        extern void auto_init_paa5100je(void);
+        auto_init_paa5100je();
     }
     if (IS_USED(MODULE_PCA9685)) {
         extern void auto_init_pca9685(void);
@@ -282,6 +302,10 @@ void saul_init_devs(void)
     if (IS_USED(MODULE_SEESAW_SOIL)) {
         extern void auto_init_seesaw_soil(void);
         auto_init_seesaw_soil();
+    }
+    if (IS_USED(MODULE_SEN5X)) {
+        extern void auto_init_sen5x(void);
+        auto_init_sen5x();
     }
     if (IS_USED(MODULE_SGP30)) {
         extern void auto_init_sgp30(void);

@@ -1,9 +1,6 @@
 /*
- * Copyright (C) 2013 Freie Universität Berlin
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2013 Freie Universität Berlin
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -132,7 +129,7 @@ int thread_wakeup(kernel_pid_t pid)
     else if (thread->status == STATUS_SLEEPING) {
         DEBUG("thread_wakeup: Thread is sleeping.\n");
 
-        sched_set_status(thread, STATUS_RUNNING);
+        sched_set_status(thread, STATUS_PENDING);
 
         irq_restore(old_state);
         sched_switch(thread->priority);
@@ -160,6 +157,29 @@ void thread_yield(void)
     thread_yield_higher();
 }
 
+/*
+ * Example of insertion operations in the linked list
+ *   thread_add_to_list(list,new_node) //Prio4
+ *   list         list      new_node
+ *  +------+     +------+   +------+
+ *  |    + | ->  |    + |   | 4  + |
+ *  +----|-+     +----|-+   +----|-+
+ *       +-->NULL     +-----/\   +-->NULL
+ *  thread_add_to_list(list,higher_node) //Prio2(Higher)
+ *  list       new_node   higher_node
+ *  +------+   +------+   +------+
+ *  |    + |   | 4  + |   | 2  + |
+ *  +----|-+   +----|-+   +----|-+
+ *       |          +-->NULL   |
+ *       |      /\-------------+
+ *       +----------------/\
+ *  thread_add_to_list(list,lower_node) //Prio6(Lower)
+ *  list       new_node   lower_node
+ *  +------+   +------+   +------+
+ *  |    + |   | 4  + |   | 6  + |
+ *  +----|-+   +----|-+   +----|-+
+ *       +-----/\   +-----/\   +-->NULL
+ */
 void thread_add_to_list(list_node_t *list, thread_t *thread)
 {
     assert(thread->status < STATUS_ON_RUNQUEUE);
@@ -187,7 +207,7 @@ uintptr_t measure_stack_free_internal(const char *stack, size_t size)
     uintptr_t *stackp = (uintptr_t *)(uintptr_t)stack;
     uintptr_t end = (uintptr_t)stack + size;
 
-    /* HACK: This will affect native/native64 only.
+    /* HACK: This will affect native32/native64 only.
      *
      * The dark magic used here is frowned upon by valgrind. E.g. valgrind may
      * deduce that a specific value was at some point allocated on the stack,
@@ -240,6 +260,7 @@ kernel_pid_t thread_create(char *stack, int stacksize, uint8_t priority,
 
     if (stacksize < 0) {
         DEBUG("thread_create: stacksize is too small!\n");
+        return -EINVAL;
     }
     /* allocate our thread control block at the top of our stackspace. Cast to
      * (uintptr_t) intermediately to silence -Wcast-align. (We manually made
@@ -372,10 +393,14 @@ static const char *state_names[STATUS_NUMOF] = {
 
 const char *thread_state_to_string(thread_status_t state)
 {
-    const char *name = state_names[state] ? state_names[state] : NULL;
+    const char *name =  NULL;
+    if (state < STATUS_NUMOF) {
+        name = state_names[state];
+    }
 
-    assert(name != NULL); /* if compiling with assertions, this is an error that
-                             indicates that the table above is incomplete */
+    /* if compiling with assertions, this is an error
+     * that indicates that the table above is incomplete */
+    assert(name != NULL);
 
     return (name != NULL) ? name : STATE_NAME_UNKNOWN;
 }

@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @ingroup     net_gnrc_rpl
  * @{
@@ -15,9 +17,6 @@
  *
  * @author      Cenk Gündoğan <cenk.guendogan@haw-hamburg.de>
  */
-
-#ifndef GLOBALS_H
-#define GLOBALS_H
 
 #include "evtimer.h"
 
@@ -46,6 +45,10 @@ extern evtimer_msg_t gnrc_rpl_evtimer;
  * @brief   Message type for DAO transmissions.
  */
 #define GNRC_RPL_MSG_TYPE_DODAG_DAO_TX        (0x0906)
+/**
+ * @brief   Message type for floating DODAG timeouts.
+ */
+#define GNRC_RPL_MSG_TYPE_DODAG_FLOAT_TIMEOUT  (0x0907)
 /** @} */
 
 /**
@@ -80,5 +83,4 @@ extern evtimer_msg_t gnrc_rpl_evtimer;
 }
 #endif
 
-#endif /* GLOBALS_H */
 /** @} */

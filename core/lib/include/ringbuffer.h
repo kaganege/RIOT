@@ -1,11 +1,10 @@
 /*
- * Copyright (C) 2013 Freie Universität Berlin
- * Copyright (C) 2013 INRIA
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2013 Freie Universität Berlin
+ * SPDX-FileCopyrightText: 2013 INRIA
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
+
+#pragma once
 
 /**
  * @ingroup     core_util
@@ -21,9 +20,6 @@
  * buffer, see @ref sys_tsrb in the System library.
  * @}
  */
-
-#ifndef RINGBUFFER_H
-#define RINGBUFFER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -163,5 +159,3 @@ unsigned ringbuffer_peek(const ringbuffer_t *__restrict rb, char *buf,
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* RINGBUFFER_H */

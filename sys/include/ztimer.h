@@ -5,6 +5,9 @@
  * General Public License v2.1. See the file LICENSE in the top level
  * directory for more details.
  */
+
+#pragma once
+
 /**
  * @defgroup    sys_ztimer ztimer high level timer abstraction layer
  * @ingroup     sys
@@ -259,9 +262,6 @@
  * @author      Joakim Nohlgård <joakim.nohlgard@eistec.se>
  */
 
-#ifndef ZTIMER_H
-#define ZTIMER_H
-
 #include <stdint.h>
 
 #include "mbox.h"
@@ -404,7 +404,7 @@ void ztimer_handler(ztimer_clock_t *clock);
 /**
  * @brief   Acquire a clock
  *
- * This will indicate the the underlying clock is required to be running.
+ * This will indicate the underlying clock is required to be running.
  * If time differences are measured using @ref ztimer_now this will make
  * sure ztimer won't turn of the clock source.
  *
@@ -425,7 +425,7 @@ static inline bool ztimer_acquire(ztimer_clock_t *clock)
 /**
  * @brief   Release a clock
  *
- * This will indicate the the underlying clock isn't required to be running
+ * This will indicate the underlying clock isn't required to be running
  * anymore and may be turned off.
  *
  * @param[in]   clock       ztimer clock to operate on
@@ -895,5 +895,4 @@ extern ztimer_clock_t *const ZTIMER_MSEC_BASE;
 }
 #endif
 
-#endif /* ZTIMER_H */
 /** @} */

@@ -7,6 +7,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @ingroup net_gnrc_rpl
  * @{
@@ -19,9 +21,6 @@
  * @author      Eric Engel <eric.engel@fu-berlin.de>
  * @author      Cenk Gündoğan <cnkgndgn@gmail.com>
  */
-
-#ifndef NET_GNRC_RPL_DODAG_H
-#define NET_GNRC_RPL_DODAG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,14 +77,18 @@ bool gnrc_rpl_instance_add(uint8_t instance_id, gnrc_rpl_instance_t **inst);
 bool gnrc_rpl_instance_remove_by_id(uint8_t instance_id);
 
 /**
+ * @brief   Remove a RPL DODAG with the pointer @p dodag from its instance.
+ *
+ * @param[in] dodag     Pointer to the RPL DODAG to remove.
+ */
+void gnrc_rpl_dodag_remove(gnrc_rpl_dodag_t *dodag);
+
+/**
  * @brief   Remove a RPL instance with the pointer @p inst.
  *
- * @param[in] inst     Pointer to the the RPL instance to remove.
- *
- * @return  true, on success.
- * @return  false, otherwise.
+ * @param[in] inst     Pointer to the RPL instance to remove.
  */
-bool gnrc_rpl_instance_remove(gnrc_rpl_instance_t *inst);
+void gnrc_rpl_instance_remove(gnrc_rpl_instance_t *inst);
 
 /**
  * @brief   Get the RPL instance with the id @p instance_id.
@@ -96,6 +99,13 @@ bool gnrc_rpl_instance_remove(gnrc_rpl_instance_t *inst);
  * @return  NULL, otherwise.
  */
 gnrc_rpl_instance_t *gnrc_rpl_instance_get(uint8_t instance_id);
+
+/**
+ * @brief   Setup self as root for the @p dodag.
+ *
+ * @param[in] dodag     Pointer to the dodag.
+ */
+void gnrc_rpl_dodag_root_init(gnrc_rpl_dodag_t *dodag);
 
 /**
  * @brief   Initialize a new RPL DODAG with the id @p dodag_id for the instance @p instance.
@@ -131,6 +141,18 @@ bool gnrc_rpl_parent_add_by_addr(gnrc_rpl_dodag_t *dodag, ipv6_addr_t *addr,
                                  gnrc_rpl_parent_t **parent);
 
 /**
+ * @brief   Iterate over all parents in all DODAGs with @p IPv6 address.
+ *
+ * @param[in]   addr        IPV6 address of the parent.
+ * @param[out]  parent      Pointer to the parent if one was found. Otherwise NULL.
+ * @param[in]   idx         Index to start searching from.
+ *
+ * @retval  Index > 0 to continue next search from, if parent was found.
+ * @retval  -ENONENT if not found
+ */
+int gnrc_rpl_parent_iter_by_addr(const ipv6_addr_t *addr, gnrc_rpl_parent_t **parent, int idx);
+
+/**
  * @brief   Remove the @p parent from its DODAG.
  *
  * @param[in] parent     Pointer to the parent.
@@ -157,6 +179,15 @@ void gnrc_rpl_parent_update(gnrc_rpl_dodag_t *dodag, gnrc_rpl_parent_t *parent);
 void gnrc_rpl_cleanup_start(gnrc_rpl_dodag_t *dodag);
 
 /**
+ * @brief Poison all routes of @p dodag by setting an infinite rank, and schedule
+ * a cleanup for the @p dodag.
+ *
+ * @param[in] dodag     Pointer to the DODAG
+ *
+ */
+void gnrc_rpl_poison_routes(gnrc_rpl_dodag_t *dodag);
+
+/**
  * @brief   Start a local repair.
  *
  * @param[in] dodag     Pointer to the DODAG
@@ -180,7 +211,6 @@ void gnrc_rpl_router_operation(gnrc_rpl_dodag_t *dodag);
 }
 #endif
 
-#endif /* NET_GNRC_RPL_DODAG_H */
 /**
  * @}
  */

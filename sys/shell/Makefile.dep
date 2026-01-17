@@ -93,6 +93,9 @@ ifneq (,$(filter shell_cmds_default,$(USEMODULE)))
   ifneq (,$(filter opendsme,$(USEPKG)))
     USEMODULE += shell_cmd_opendsme
   endif
+  ifneq (,$(filter openthread-cli-%,$(USEMODULE)))
+    USEMODULE += shell_cmd_openthread
+  endif
   ifneq (,$(filter openwsn,$(USEPKG)))
     USEMODULE += shell_cmd_openwsn
   endif
@@ -212,6 +215,11 @@ endif
 ifneq (,$(filter shell_cmd_md5sum,$(USEMODULE)))
   USEMODULE += shell_cmd_vfs
 endif
+ifneq (,$(filter shell_cmd_mtd,$(USEMODULE)))
+  USEMODULE += fmt
+  USEMODULE += mtd
+  USEMODULE += od
+endif
 ifneq (,$(filter shell_cmd_nanocoap_vfs,$(USEMODULE)))
   USEMODULE += nanocoap_vfs
   USEMODULE += vfs_util
@@ -286,6 +294,10 @@ endif
 ifneq (,$(filter shell_cmd_vfs,$(USEMODULE)))
   USEMODULE += vfs
   USEMODULE += tiny_strerror
+endif
+
+ifneq (,$(filter shell_cmd_xipfs,$(USEMODULE)))
+  USEMODULE += xipfs
 endif
 
 ifneq (,$(filter shell_democommands,$(USEMODULE)))

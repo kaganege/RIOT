@@ -1,10 +1,7 @@
 /*
- * Copyright (C) 2023 TU Dresden
- *               2024 HAW Hamburg
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2023 TU Dresden
+ * SPDX-FileCopyrightText: 2024 HAW Hamburg
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -12,7 +9,7 @@
  * @{
  *
  * @brief       Tests the PSA hash configurations
- *              Contents have been copied from `examples/psa_crypto`
+ *              Contents have been copied from `examples/advanced/psa_crypto`
  *
  * @author      Mikolai Gütschow <mikolai.guetschow@tu-dresden.de>
  * @author      Lena Boeckmann <lena.boeckmann@haw-hamburg.de>
@@ -25,10 +22,8 @@
 
 #include "psa/crypto.h"
 
-/* certain PSA backends require the data to be in RAM rather than ROM
- * so these values cannot be `const` */
-static uint8_t msg[] = "Hello World!";
-static size_t msg_len = sizeof(msg)-1; // exclude NULL-byte
+static const uint8_t msg[] = "Hello World!";
+static const size_t msg_len = sizeof(msg)-1; // exclude NULL-byte
 
 static const uint8_t hash_sha224[] = {
     0x45, 0x75, 0xbb, 0x4e, 0xc1, 0x29, 0xdf, 0x63, 0x80, 0xce, 0xdd, 0xe6, 0xd7,
@@ -63,7 +58,7 @@ static const uint8_t hash_sha512_256[] = {
     0x72, 0x3a, 0x26, 0x71, 0x0e, 0x46, 0x76, 0x13, 0x01, 0xc8, 0xb5, 0x4c, 0x56,
     0xfa, 0x72, 0x22, 0x67, 0x58, 0x1a};
 
-static uint8_t msg_long[] = {
+static const uint8_t msg_long[] = {
     0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
     0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
     0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
@@ -115,7 +110,6 @@ static const uint8_t hash_long_sha512_256[] = {
     0xc0, 0xec, 0xc0, 0x99, 0x56, 0x32, 0x77, 0xcd, 0x20, 0x78, 0xa7, 0x56, 0x4f,
     0x63, 0x52, 0x68, 0x81, 0x4a, 0xce
 };
-
 
 /**
  * @brief   Example function to use different hash algorithms

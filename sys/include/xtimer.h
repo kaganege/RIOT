@@ -7,6 +7,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    sys_xtimer xtimer high level timer abstraction layer (deprecated)
  * @ingroup     sys
@@ -39,7 +41,11 @@
  * @author  Kaspar Schleiser <kaspar@schleiser.de>
  * @author  Joakim Nohlgård <joakim.nohlgard@eistec.se>
  */
-#ifndef XTIMER_H
+
+/**
+ * @brief This macro is used to check whether internal headers have been
+ * included via the public header
+ */
 #define XTIMER_H
 
 #include <stdbool.h>
@@ -188,23 +194,6 @@ static inline void xtimer_usleep(uint32_t microseconds);
  * @param[in] microseconds  the amount of microseconds the thread should sleep
  */
 static inline void xtimer_usleep64(uint64_t microseconds);
-
-/**
- * @brief Stop execution of a thread for some time
- *
- * @deprecated This function is deprecated as no XTIMER backend is currently
- *             configured to run at more than 1 MHz, making nanoseconds accuracy
- *             impossible to achieve.
- *
- * Don't expect nanosecond accuracy. As of now, this function just calls
- * xtimer_usleep(nanoseconds/1000).
- *
- * When called from an ISR, this function will spin-block, so only use it there
- * for *very* short periods.
- *
- * @param[in] nanoseconds   the amount of nanoseconds the thread should sleep
- */
-static inline void xtimer_nanosleep(uint32_t nanoseconds);
 
 /**
  * @brief Stop execution of a thread for some time, 32bit version
@@ -683,4 +672,3 @@ static inline int xtimer_msg_receive_timeout64(msg_t *msg, uint64_t timeout);
 #endif /* MODULE_ZTIMER_XTIMER_COMPAT */
 
 /** @} */
-#endif /* XTIMER_H */

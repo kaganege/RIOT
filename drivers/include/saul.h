@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    drivers_saul [S]ensor [A]ctuator [U]ber [L]ayer
  * @ingroup     drivers
@@ -44,9 +46,6 @@
  *
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  */
-
-#ifndef SAUL_H
-#define SAUL_H
 
 #include <errno.h>
 #include <stdint.h>
@@ -102,7 +101,9 @@ enum {
     SAUL_ACT_ID_MOTOR,                /**< actuator: motor */
     SAUL_ACT_ID_SWITCH,               /**< actuator: simple on/off switch */
     SAUL_ACT_ID_DIMMER,               /**< actuator: dimmable switch */
-    SAUL_ACT_NUMOF                  /**< Number of actuators supported */
+    SAUL_ACT_ID_VOLTAGE,              /**< actuator: output voltage */
+    SAUL_ACT_ID_CURRENT,              /**< actuator: output current */
+    SAUL_ACT_NUMOF                    /**< Number of actuators supported */
     /* Extend this list as needed, but keep SAUL_ACT_ID_ANY the first and
      * SAUL_ACT_NUMOF the last entry
      */
@@ -166,6 +167,10 @@ enum {
     SAUL_ACT_SWITCH         = SAUL_CAT_ACT | SAUL_ACT_ID_SWITCH,
     /** actuator: dimmable switch */
     SAUL_ACT_DIMMER         = SAUL_CAT_ACT | SAUL_ACT_ID_DIMMER,
+    /** actuator: output current */
+    SAUL_ACT_CURRENT        = SAUL_CAT_ACT | SAUL_ACT_ID_CURRENT,
+    /** actuator: output voltage */
+    SAUL_ACT_VOLTAGE        = SAUL_CAT_ACT | SAUL_ACT_ID_VOLTAGE,
     /** any sensor - wildcard */
     SAUL_SENSE_ANY          = SAUL_CAT_SENSE | SAUL_SENSE_ID_ANY,
     /** sensor: simple button */
@@ -356,5 +361,4 @@ ssize_t saul_class_write(char *dest, size_t max_size, uint8_t class_id);
 }
 #endif
 
-#endif /* SAUL_H */
 /** @} */

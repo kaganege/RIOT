@@ -1,9 +1,6 @@
 /*
- * Copyright (C) 2014 Freie Universität Berlin
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2014 Freie Universität Berlin
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -58,8 +55,7 @@ static int queue_msg(thread_t *target, const msg_t *m)
 
     *dest = *m;
 #if MODULE_CORE_THREAD_FLAGS
-    target->flags |= THREAD_FLAG_MSG_WAITING;
-    thread_flags_wake(target);
+    thread_flags_set_internal(target, THREAD_FLAG_MSG_WAITING);
 #endif
     return 1;
 }
@@ -157,8 +153,7 @@ static int _msg_send(msg_t *m, kernel_pid_t target_pid, bool block,
         thread_add_to_list(&(target->msg_waiters), me);
 
 #if MODULE_CORE_THREAD_FLAGS
-        target->flags |= THREAD_FLAG_MSG_WAITING;
-        thread_flags_wake(target);
+        thread_flags_set_internal(target, THREAD_FLAG_MSG_WAITING);
 #endif
 
         irq_restore(state);
@@ -458,12 +453,23 @@ static unsigned _msg_avail(thread_t *thread)
 
 unsigned msg_avail_thread(kernel_pid_t pid)
 {
-    return _msg_avail(thread_get(pid));
+    unsigned irq_state = irq_disable();
+    thread_t *t = thread_get(pid);
+    if (!t) {
+        irq_restore(irq_state);
+        return 0;
+    }
+    unsigned result = _msg_avail(t);
+    irq_restore(irq_state);
+    return result;
 }
 
 unsigned msg_avail(void)
 {
-    return _msg_avail(thread_get_active());
+    unsigned irq_state = irq_disable();
+    unsigned result = _msg_avail(thread_get_active());
+    irq_restore(irq_state);
+    return result;
 }
 
 unsigned msg_queue_capacity(kernel_pid_t pid)
@@ -473,7 +479,9 @@ unsigned msg_queue_capacity(kernel_pid_t pid)
 
     thread_t *thread = thread_get(pid);
 
-    assert(thread != NULL);
+    if (!thread) {
+        return 0;
+    }
 
     int queue_cap = 0;
 

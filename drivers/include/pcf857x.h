@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    drivers_pcf857x PCF857X I2C I/O expanders
  * @ingroup     drivers_misc
@@ -237,9 +239,6 @@
  * @file
  */
 
-#ifndef PCF857X_H
-#define PCF857X_H
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -327,20 +326,6 @@ typedef uint8_t pcf857x_data_t;     /**< type that can mask all expander pins */
 
 #endif /* MODULE_PCF8575 || DOXYGEN */
 /** @} */
-
-/**
- * @brief       Definition of PCF857X driver error codes
- *
- * @deprecated  These are aliases for errno error codes now, use them directly
- */
-typedef enum {
-    PCF857X_OK              = 0,        /**< success */
-    PCF857X_ERROR_I2C       = ENXIO,    /**< I2C communication error */
-    PCF857X_ERROR_INV_EXP   = ENOTSUP,  /**< invalid expander variant */
-    PCF857X_ERROR_INV_MODE  = EINVAL,   /**< invalid pin mode */
-    PCF857X_ERROR_INV_FLANK = EINVAL,   /**< invalid interrupt flank */
-    PCF857X_ERROR_INT_PIN   = ENOSYS,   /**< interrupt pin initialization failed */
-} pcf857x_error_codes_t;
 
 /**
  * @brief Definition of PCF857X expander variants
@@ -601,5 +586,4 @@ void pcf857x_gpio_irq_disable(pcf857x_t *dev, uint8_t pin);
 }
 #endif
 
-#endif /* PCF857X_H */
 /** @} */

@@ -32,6 +32,7 @@
 #include "od.h"
 #include "shell.h"
 
+#ifdef MODULE_GNRC_IPV6
 static ssize_t _send(coap_pkt_t *pkt, size_t len,
                           char *addr_str, const char *port_str)
 {
@@ -93,8 +94,7 @@ static int _cmd_client(int argc, char **argv)
 {
     /* Ordered like the RFC method code numbers, but off by 1. GET is code 0. */
     const char *method_codes[] = {"get", "post", "put"};
-    unsigned buflen = 128;
-    uint8_t buf[buflen];
+    uint8_t buf[128];
     coap_pkt_t pkt;
     size_t len;
 
@@ -113,14 +113,14 @@ static int _cmd_client(int argc, char **argv)
         goto end;
     }
 
-    pkt.hdr = (coap_hdr_t *)buf;
+    pkt.buf = buf;
 
     /* parse options */
     if (argc == 5 || argc == 6) {
-        ssize_t hdrlen = coap_build_hdr(pkt.hdr, COAP_TYPE_CON,
-                                        _client_token, _client_token_len,
-                                        code_pos+1, 1);
-        coap_pkt_init(&pkt, &buf[0], buflen, hdrlen);
+        ssize_t hdrlen = coap_build_udp_hdr(buf, sizeof(buf), COAP_TYPE_CON,
+                                            _client_token, _client_token_len,
+                                            code_pos + 1, 1);
+        coap_pkt_init(&pkt, &buf[0], sizeof(buf), hdrlen);
         coap_opt_add_string(&pkt, COAP_OPT_URI_PATH, argv[4], '/');
         if (argc == 6) {
             coap_opt_add_uint(&pkt, COAP_OPT_CONTENT_FORMAT, COAP_FORMAT_TEXT);
@@ -137,7 +137,7 @@ static int _cmd_client(int argc, char **argv)
         printf("nanocli: sending msg ID %u, %" PRIuSIZE " bytes\n", coap_get_id(&pkt),
                len);
 
-        ssize_t res = _send(&pkt, buflen, argv[2], argv[3]);
+        ssize_t res = _send(&pkt, sizeof(buf), argv[2], argv[3]);
         if (res < 0) {
             printf("nanocli: msg send failed: %" PRIdSIZE "\n", res);
         }
@@ -199,6 +199,7 @@ static int _cmd_client_token(int argc, char **argv){
     return 0;
 }
 SHELL_COMMAND(client_token, "Set Token for CoAP client", _cmd_client_token);
+#endif
 
 static int _blockwise_cb(void *arg, size_t offset, uint8_t *buf,
                          size_t len, int more)
@@ -391,3 +392,51 @@ static int _cmd_get_non(int argc, char **argv)
 }
 
 SHELL_COMMAND(get_non, "non-confirmable get", _cmd_get_non);
+
+#ifdef MODULE_NANOCOAP_SOCK_OBSERVE
+static int _observe_cb(void *arg, coap_pkt_t *pkt)
+{
+    (void)arg;
+
+    if (coap_get_code_class(pkt) != COAP_CLASS_SUCCESS) {
+        printf("observe: error\n");
+    }
+
+    od_hex_dump(pkt->payload, pkt->payload_len, OD_WIDTH_DEFAULT);
+
+    return pkt->payload_len;
+}
+
+static int _cmd_observe(int argc, char **argv)
+{
+    static coap_observe_client_t ctx;
+    bool observe = true;
+    int res;
+
+    if ((argc < 2) || (argc > 3)) {
+        printf("usage: %s <url> [on|off]\n", argv[0]);
+        return 1;
+    }
+    if (argc > 2 && !strcmp("off", argv[2])) {
+        observe = false;
+    }
+
+    if (ctx.cb && observe) {
+        puts("CLI can observe only a single resource at a time");
+        return -1;
+    }
+
+    if (observe) {
+        res = nanocoap_sock_observe_url(argv[1], &ctx, _observe_cb, NULL);
+    }
+    else {
+        res = nanocoap_sock_unobserve_url(argv[1], &ctx);
+    }
+
+    if (res < 0) {
+        printf("error: %d\n", res);
+    }
+    return res;
+}
+SHELL_COMMAND(observe, "observe URL", _cmd_observe);
+#endif /* MODULE_NANOCOAP_SOCK_OBSERVE */

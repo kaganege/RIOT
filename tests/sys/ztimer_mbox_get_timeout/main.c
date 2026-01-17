@@ -1,9 +1,6 @@
 /*
- * Copyright (C) 2023 Otto-von-Guericke-Universität Magdeburg
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2023 Otto-von-Guericke-Universität Magdeburg
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -72,7 +69,7 @@ static void test_timeout_reached(void)
 static void test_msg_prior_timeout(void)
 {
     const uint32_t msg_timeout_us = 1 * US_PER_MS;
-#if defined(BOARD_NATIVE64) || defined(BOARD_NATIVE)
+#if defined(CPU_NATIVE)
     /* relax timing on native, as background load can mess with timing */
     const uint32_t wait_timeout_us = 1000 * US_PER_MS;
 #else
@@ -94,7 +91,7 @@ static void test_msg_prior_timeout(void)
     /* the function should return BEFORE the timeout was triggered */
     expect(stop - start < wait_timeout_us);
 
-#if !defined(BOARD_NATIVE64) && !defined(BOARD_NATIVE)
+#if !defined(CPU_NATIVE)
     /* The function should return AFTER the message was send.
      * This test is flaky on native, at least with LLVM. */
     expect(stop - start >= msg_timeout_us);

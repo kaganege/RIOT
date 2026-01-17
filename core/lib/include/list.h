@@ -1,11 +1,10 @@
 /*
- * Copyright (C) 2016 Kaspar Schleiser <kaspar@schleiser.de>
- *               2016 TriaGnoSys GmbH
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2016 Kaspar Schleiser <kaspar@schleiser.de>
+ * SPDX-FileCopyrightText: 2016 TriaGnoSys GmbH
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
+
+#pragma once
 
 /**
  * @ingroup     core_util
@@ -19,9 +18,6 @@
  * @author      Kaspar Schleiser <kaspar@schleiser.de>
  * @author      Víctor Ariño <victor.arino@zii.aero>
  */
-
-#ifndef LIST_H
-#define LIST_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -99,5 +95,4 @@ static inline list_node_t *list_remove(list_node_t *list, list_node_t *node)
 }
 #endif
 
-#endif /* LIST_H */
 /** @} */

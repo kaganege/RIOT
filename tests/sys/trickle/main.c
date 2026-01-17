@@ -1,9 +1,6 @@
 /*
- * Copyright (C) 2017 HAW Hamburg
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2017 HAW Hamburg
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -24,7 +21,6 @@
 #include "thread.h"
 #include "msg.h"
 #include "ztimer.h"
-
 
 #define TRICKLE_MSG     (0xfeef)
 #define TR_IMIN         (8)

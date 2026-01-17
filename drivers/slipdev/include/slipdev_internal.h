@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @ingroup drivers_slipdev
  * @{
@@ -16,8 +18,6 @@
  *
  * @author  Martine Lenders <m.lenders@fu-berlin.de>
  */
-#ifndef SLIPDEV_INTERNAL_H
-#define SLIPDEV_INTERNAL_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -43,9 +43,26 @@ extern "C" {
 /**
  * @brief   Marker byte for beginning of stdio
  * @see     taken from diagnostic transfer from
- *          [SLIPMUX](https://tools.ietf.org/html/draft-bormann-t2trg-slipmux-02#section-4)
+ *          [SLIPMUX](https://tools.ietf.org/html/draft-bormann-t2trg-slipmux-03#section-4)
  */
-#define SLIPDEV_STDIO_START (0x0aU)
+#define SLIPDEV_START_STDIO (0x0aU)
+
+/**
+ * @brief   Marker byte for beginning of configuration/CoAP
+ * @see     taken from configuration from
+ *          [SLIPMUX](https://tools.ietf.org/html/draft-bormann-t2trg-slipmux-03#section-5)
+ */
+#define SLIPDEV_START_COAP (0xa9U)
+
+/**
+ * @brief   Starts an IP packet frame
+ */
+#define SLIPDEV_START_NET(byte) ( \
+            /* is it an IPv4 packet? */ \
+            (byte >= 0x45 && byte <= 0x4f) || \
+            /* or is it an IPv6 packet? */ \
+            (byte >= 0x60 && byte <= 0x6f) \
+            )
 /** @} */
 
 /**
@@ -83,5 +100,4 @@ void slipdev_write_bytes(uart_t uart, const uint8_t *data, size_t len);
 }
 #endif
 
-#endif /* SLIPDEV_INTERNAL_H */
 /** @} */

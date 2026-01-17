@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2014 Freie Universität Berlin
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2014 Freie Universität Berlin
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
+
+#pragma once
 
 /**
  * @ingroup     core_util
@@ -20,9 +19,6 @@
  *
  * @author      Kaspar Schleiser <kaspar@schleiser.de>
  */
-
-#ifndef DEBUG_H
-#define DEBUG_H
 
 #include <stdio.h>
 #include "sched.h"
@@ -113,7 +109,14 @@ extern "C" {
  *
  * @brief Print debug information to stdout
  *
- * @note Another name for ::DEBUG_PRINT
+ * @note    This looks similar to the @ref LOG_DEBUG() function. However, it is
+ *          enabled on a per-file basis. Prefer @ref DEBUG for debug output
+ *          relevant for debugging a module in RIOT. Prefer @ref LOG_DEBUG() for
+ *          debug output relevant for application developers using your module
+ *          (e.g. to hint potentially incorrect / inefficient use of your
+ *          library).
+ * @details If a variable is only accessed by `DEBUG()`, the compiler will
+ *          warn about unused variables when `ENABLE_DEBUG` is set to `0`.
  */
 #define DEBUG(...) do { if (ENABLE_DEBUG) { DEBUG_PRINT(__VA_ARGS__); } } while (0)
 
@@ -141,5 +144,4 @@ extern "C" {
 }
 #endif
 
-#endif /* DEBUG_H */
 /** @} */

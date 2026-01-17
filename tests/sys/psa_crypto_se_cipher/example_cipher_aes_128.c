@@ -1,9 +1,6 @@
 /*
- * Copyright (C) 2022 HAW Hamburg
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+ * SPDX-FileCopyrightText: 2022 HAW Hamburg
+ * SPDX-License-Identifier: LGPL-2.1-only
  */
 
 /**
@@ -11,7 +8,7 @@
  * @{
  *
  * @brief       Tests the PSA secure element cipher configurations
- *              Contents have been copied from `examples/psa_crypto`
+ *              Contents have been copied from `examples/advanced/psa_crypto`
  *
  * @author      Mikolai Gütschow <mikolai.guetschow@tu-dresden.de>
  * @author      Lena Boeckmann <lena.boeckmann@haw-hamburg.de>
@@ -64,7 +61,6 @@ psa_status_t example_cipher_aes_128(void)
     psa_set_key_usage_flags(&attr, usage);
     psa_set_key_bits(&attr, 128);
     psa_set_key_type(&attr, PSA_KEY_TYPE_AES);
-
 
     psa_key_lifetime_t lifetime = PSA_KEY_LIFETIME_FROM_PERSISTENCE_AND_LOCATION
                                       (PSA_KEY_LIFETIME_VOLATILE, PSA_ATCA_LOCATION_DEV0);

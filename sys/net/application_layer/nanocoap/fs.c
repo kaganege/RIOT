@@ -30,6 +30,8 @@
 #define ENABLE_DEBUG 0
 #include "debug.h"
 
+static char _dirent_buf[CONFIG_NANOCOAP_QS_MAX];
+
 static int nanocoap_fs_mount(vfs_mount_t *mountp)
 {
     nanocoap_fs_t *fs = mountp->private_data;
@@ -175,18 +177,20 @@ static int _query_server(nanocoap_sock_t *sock, const char *path,
     uint8_t *buf = _buf;
 
     coap_pkt_t pkt = {
-        .hdr = (void *)buf,
+        .buf = buf,
     };
 
     uint16_t lastonum = 0;
 
-    buf += coap_build_hdr(pkt.hdr, COAP_TYPE_CON, NULL, 0, COAP_METHOD_GET,
-                          nanocoap_sock_next_msg_id(sock));
+    ssize_t hdr_len = coap_build_udp_hdr(_buf, sizeof(_buf), COAP_TYPE_CON, NULL, 0, COAP_METHOD_GET,
+                                         nanocoap_sock_next_msg_id(sock));
+    assume(hdr_len > 0);
+    buf += hdr_len;
     buf += coap_opt_put_uri_pathquery(buf, &lastonum, path);
     buf += coap_opt_put_uint(buf, lastonum, COAP_OPT_BLOCK2, 0);
     buf += coap_opt_put_uint(buf, COAP_OPT_BLOCK2, COAP_OPT_SIZE2, 0);
 
-    assert((uintptr_t)buf - (uintptr_t)pkt.hdr < sizeof(_buf));
+    assert((uintptr_t)buf - (uintptr_t)_buf < sizeof(_buf));
 
     pkt.payload = buf;
     pkt.payload_len = 0;
@@ -288,7 +292,8 @@ static int nanocoap_fs_readdir(vfs_DIR *dirp, vfs_dirent_t *entry)
         .offset = dir->offset++,
     };
 
-    res = nanocoap_link_format_get(&fs->sock, dir->urlbuf, _dir_cb, &ctx);
+    res = nanocoap_link_format_get(&fs->sock, dir->urlbuf, _dir_cb, &ctx,
+                                   _dirent_buf, sizeof(_dirent_buf));
     if (res == -EINTR) {
         /* we use this to abort listing early */
         res = 1;

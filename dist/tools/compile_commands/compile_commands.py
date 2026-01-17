@@ -209,8 +209,7 @@ def write_compile_command(state, compiler, src, flags, cdetails, path):
     else:
         sys.stdout.write(",\n")
     obj = os.path.splitext(src)[0] + ".o"
-    arguments = [compiler, '-DRIOT_FILE_RELATIVE="' + os.path.join(cdetails.dir, src) + '"',
-                 '-DRIOT_FILE_NOPATH="' + src + '"']
+    arguments = [compiler]
     arguments += flags
     if '-c' in arguments:
         # bindgen is unhappy with multiple -c (that would be created by the -c
@@ -337,6 +336,8 @@ if __name__ == '__main__':
             '-mlongcalls',
             # GCC specific diagnostics: Tell GCC address space starts at 0
             '--param=min-pagesize=0',
+            # -fanalyzer is GCC only
+            '-fanalyzer',
         ]
         _args.filter_out.extend(flags)
     generate_compile_commands(_args)

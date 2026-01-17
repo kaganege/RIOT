@@ -5,7 +5,7 @@
 # When the docker image is updated, checks at
 # dist/tools/buildsystem_sanity_check/check.sh start complaining in CI, and
 # provide the latest values to verify and fill in.
-DOCKER_TESTED_IMAGE_REPO_DIGEST := 045fd7eb54ccba2d5f4c06e8619bb1d5cd20ef96da8c6d4b7c1f9127e70adfff
+DOCKER_TESTED_IMAGE_REPO_DIGEST := 08fa7da2c702ac4db7cf57c23fc46c1971f3bffc4a6eff129793f853ec808736
 
 DOCKER_PULL_IDENTIFIER := docker.io/riot/riotbuild@sha256:$(DOCKER_TESTED_IMAGE_REPO_DIGEST)
 export DOCKER_IMAGE ?= $(DOCKER_PULL_IDENTIFIER)
@@ -19,14 +19,20 @@ DEPS_FOR_RUNNING_DOCKER :=
 DOCKER ?= docker
 
 # List of Docker-enabled make goals
-export DOCKER_MAKECMDGOALS_POSSIBLE = \
+DOCKER_MAKECMDGOALS_POSSIBLE := \
   all \
-  buildtest-indocker \
   scan-build \
   scan-build-analyze \
   tests-% \
   #
-export DOCKER_MAKECMDGOALS = $(filter $(DOCKER_MAKECMDGOALS_POSSIBLE),$(MAKECMDGOALS))
+
+# On native, we also can run the test in docker
+ifneq (, $(filter native%,$(BOARD)))
+  DOCKER_MAKECMDGOALS_POSSIBLE += test
+endif
+
+export DOCKER_MAKECMDGOALS_POSSIBLE
+export DOCKER_MAKECMDGOALS := $(filter $(DOCKER_MAKECMDGOALS_POSSIBLE),$(MAKECMDGOALS))
 
 # Docker creates the files .dockerinit and .dockerenv in the root directory of
 # the container, we check for the files to determine if we are inside a container.
@@ -81,6 +87,7 @@ export DOCKER_ENV_VARS += \
   RIOT_CI_BUILD \
   RIOT_VERSION \
   RIOT_VERSION_CODE \
+  RUSTFLAGS \
   SCANBUILD_ARGS \
   SCANBUILD_OUTPUTDIR \
   SIZE \
@@ -92,7 +99,7 @@ export DOCKER_ENV_VARS += \
 # List of all exported environment variables that shall be passed on to the
 # Docker container since they might have been set through the command line
 # and environment.
-# Their origin cannot be checked since they are often redefined or overriden
+# Their origin cannot be checked since they are often redefined or overridden
 # in Makefile/Makefile.include, etc. and their origin is changed to file
 export DOCKER_ENV_VARS_ALWAYS += \
   DISABLE_MODULE \
@@ -184,7 +191,7 @@ DOCKER_MAKE_ARGS += $(DOCKER_MAKE_JOBS)
 #   the variable is mapped to a path inside `DOCKER_RIOTBASE` in the container.
 #
 # * if the directory is not contained in the `RIOT` repository,
-#   the directory must be mounted in the countainer.
+#   the directory must be mounted in the container.
 #   The variable and directory are mapped to a path outside `DOCKER_RIOTBASE`.
 #   Some variables have hardwritten mapping directories (`RIOTCPU` for example),
 #   and other have a mapping directory based on their directory name.
@@ -207,7 +214,7 @@ define dir_is_outside_riotbase
 $(filter $(abspath $1)/,$(patsubst $(RIOTBASE)/%,%,$(abspath $1)/))
 endef
 
-# Mapping of directores inside docker
+# Mapping of directories inside docker
 #
 # Return the path of directories from the host within the container
 #
@@ -295,9 +302,9 @@ DOCKER_VOLUMES_AND_ENV += -e 'CCACHE_BASEDIR=$(DOCKER_RIOTBASE)'
 
 DOCKER_VOLUMES_AND_ENV += $(call docker_volume_and_env,BUILD_DIR,,build)
 
-# Prevent recursive invocation of docker by explicitely disabling docker via env variable,
+# Prevent recursive invocation of docker by explicitly disabling docker via env variable,
 # overwriting potential default in application Makefile
-DOCKER_VOLUMES_AND_ENV += $(call docker_volume_and_env,BUILD_IN_DOCKER,,0)
+DOCKER_VOLUMES_AND_ENV += -e 'BUILD_IN_DOCKER=0'
 
 DOCKER_VOLUMES_AND_ENV += $(call docker_volume_and_env,RIOTPROJECT,,riotproject)
 DOCKER_VOLUMES_AND_ENV += $(call docker_volume_and_env,RIOTCPU,,riotcpu)
@@ -337,8 +344,10 @@ DOCKER_OVERRIDE_CMDLINE += $(call docker_cmdline_mapping,EXTERNAL_BOARD_DIRS,$(D
 # would lead to both being mapped to '$(DOCKER_BUILD_ROOT)/external/name'
 _mounted_dirs = $(foreach d,$(EXTERNAL_MODULE_DIRS),$(if $(call dir_is_outside_riotbase,$(d)),$(d)))
 ifneq ($(words $(sort $(notdir $(_mounted_dirs)))),$(words $(sort $(_mounted_dirs))))
-  $(warning Mounted EXTERNAL_MODULE_DIRS: $(_mounted_dirs))
-  $(error Mapping EXTERNAL_MODULE_DIRS in docker is not supported for directories with the same name)
+  ifeq (1, $(BUILD_IN_DOCKER))
+    $(warning Mounted EXTERNAL_MODULE_DIRS: $(_mounted_dirs))
+    $(error Mapping EXTERNAL_MODULE_DIRS in docker is not supported for directories with the same name)
+  endif
 endif
 
 # Handle worktree by mounting the git common dir in the same location
@@ -359,6 +368,19 @@ docker_run_make = \
 	-w '$(DOCKER_APPDIR)' '$2' \
 	$(MAKE) $(DOCKER_OVERRIDE_CMDLINE) $4 $1
 
+# create cargo folders
+# This prevents cargo inside docker from creating them with root permissions
+# (should they not exist), and also from re-building everything every time
+# because the .cargo inside is as ephemeral as the build container.
+DEPS_FOR_RUNNING_DOCKER += $(HOME)/.cargo/git
+DEPS_FOR_RUNNING_DOCKER += $(HOME)/.cargo/registry
+
+$(HOME)/.cargo/git:
+	$(Q)mkdir -p $@
+
+$(HOME)/.cargo/registry:
+	$(Q)mkdir -p $@
+
 # This will execute `make $(DOCKER_MAKECMDGOALS)` inside a Docker container.
 # We do not push the regular $(MAKECMDGOALS) to the container's make command in
 # order to only perform building inside the container and defer executing any
@@ -368,4 +390,6 @@ docker_run_make = \
 # hardware which may not be reachable from inside the container.
 ..in-docker-container: $(DEPS_FOR_RUNNING_DOCKER)
 	@$(COLOR_ECHO) '$(COLOR_GREEN)Launching build container using image "$(DOCKER_IMAGE)".$(COLOR_RESET)'
+	@mkdir -p $(HOME)/.cargo/git
+	@mkdir -p $(HOME)/.cargo/registry
 	$(call docker_run_make,$(DOCKER_MAKECMDGOALS),$(DOCKER_IMAGE),,$(DOCKER_MAKE_ARGS))

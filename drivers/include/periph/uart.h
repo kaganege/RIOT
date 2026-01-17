@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    drivers_periph_uart UART
  * @ingroup     drivers_periph
@@ -54,9 +56,6 @@
  *
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  */
-
-#ifndef PERIPH_UART_H
-#define PERIPH_UART_H
 
 #include <errno.h>
 #include <limits.h>
@@ -447,5 +446,4 @@ void uart_disable_tx(uart_t uart);
 }
 #endif
 
-#endif /* PERIPH_UART_H */
 /** @} */

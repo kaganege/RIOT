@@ -39,6 +39,7 @@ cachegrind.out*
 # Visual Studio Code user settings
 .vscode/*
 !.vscode/settings.json
+*.code-workspace
 # ctags index files
 tags
 # GDB initialization scripts
@@ -93,9 +94,6 @@ keys/
 
 # clangd language server
 .clangd/
-
-# custom clang-tidy flags, also used when using clangd language server
-.clang-tidy
 
 # Environments
 .venv
